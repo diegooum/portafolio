@@ -1,0 +1,12 @@
+# Dependencias
+node_modules/
+dist/
+build/
+
+# Variables de entorno (¡Muy importante que no subas tus llaves secretas!)
+.env
+.env.local
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
