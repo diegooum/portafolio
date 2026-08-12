@@ -1,24 +1,11 @@
 import { Suspense } from 'react';
+import { Loader } from '@react-three/drei';
 import { Canvas } from '@react-three/fiber';
 import RecordStoreScene from './components/three/RecordStoreScene';
 
-/**
- * App
- * ---------------------------------------------------------
- * Punto de entrada del "Metaverso de la disquería". El scroll
- * vertical tradicional queda descartado: toda la experiencia
- * vive dentro de un único <Canvas> a pantalla completa.
- *
- * La UI HTML que queda fuera del Canvas es mínima a propósito
- * (título + pista de interacción) — el resto de la información
- * aparece dentro de la escena vía overlays de <Html> (drei)
- * cuando el usuario interactúa con un objeto 3D.
- * ---------------------------------------------------------
- */
 export default function App() {
   return (
     <div className="relative h-screen w-screen overflow-hidden bg-carbon">
-      {/* Encabezado mínimo — fuera del Canvas, siempre visible */}
       <div className="pointer-events-none absolute left-6 top-6 z-10 md:left-10 md:top-10">
         <p className="font-sans text-xs font-medium uppercase tracking-[0.25em] text-bone-muted">
           Diego Medina Paredes
@@ -40,6 +27,13 @@ export default function App() {
           <RecordStoreScene />
         </Suspense>
       </Canvas>
+      <Loader 
+        dataInterpolation={(p) => `Cargando ${p.toFixed(0)}%`}
+        containerStyles={{ backgroundColor: '#0B0B0D' }} // Fondo oscuro
+        innerStyles={{ width: '300px' }} // Ancho de la barra
+        barStyles={{ backgroundColor: '#E26D28' }} // Barra de progreso color naranja (piso)
+        dataStyles={{ color: '#F9F9F9', fontFamily: 'sans-serif', fontSize: '14px', fontWeight: 'bold' }} // Texto
+      />
     </div>
   );
 }

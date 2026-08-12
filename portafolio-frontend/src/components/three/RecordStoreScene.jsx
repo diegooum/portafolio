@@ -10,11 +10,11 @@ const COLORS = {
   wall: '#F9F9F9',
   floor: '#E26D28',
   furniture: '#4A3320',
-  academica: '#FFDE59', 
-  experiencia: '#FF914D', 
-  proyectos: '#00D26A', 
-  certificados: '#8C52FF', 
-  idiomas: '#FF3131', 
+  academica: '#FFDE59',
+  experiencia: '#FF914D',
+  proyectos: '#00D26A',
+  certificados: '#8C52FF',
+  idiomas: '#FF3131',
   // -- Nuevos, solo para elementos decorativos / easter eggs --
   rug: '#2E2E52',
   rugAccent: '#8C52FF',
@@ -31,8 +31,8 @@ const COLORS = {
 const ZONES = {
   overview: { position: [0, 2, 7.5], target: [0, 1.5, 0] },
   projects: { position: [0, 2.8, 3.5], target: [0, 2.4, -1.25] },
-  wall:     { position: [0, 3.5, 3], target: [0, 3.5, 0] },
-  contact:  { position: [0, 2.1, 2.6], target: [0, 1.6, -0.7] },
+  wall: { position: [0, 3.5, 3], target: [0, 3.5, 0] },
+  contact: { position: [0, 2.1, 2.6], target: [0, 1.6, -0.7] },
 };
 
 /* =========================================================
@@ -84,17 +84,17 @@ function InteractiveRecordSleeve({ basePosition, color, imageUrl, title, subtitl
   // Animación de Vuelo y Apertura de Tapa
   useFrame((_, delta) => {
     // 1. Vuelo del vinilo: Si está activo, vuela hacia la cámara. Si no, vuelve al mueble.
-    const targetPos = isActive 
+    const targetPos = isActive
       ? new THREE.Vector3(-0.6, 2.6, 1.5) // Posición flotando en el aire frente a ti
       : new THREE.Vector3(...basePosition); // Su lugar original en la repisa
-    
+
     groupRef.current.position.lerp(targetPos, delta * 6);
 
     // 2. Apertura de la tapa: Se abre casi por completo
     const targetRotation = isActive ? -Math.PI * 0.95 : 0;
     frontCoverRef.current.rotation.y = THREE.MathUtils.lerp(
-      frontCoverRef.current.rotation.y, 
-      targetRotation, 
+      frontCoverRef.current.rotation.y,
+      targetRotation,
       delta * 6
     );
   });
@@ -118,15 +118,15 @@ function InteractiveRecordSleeve({ basePosition, color, imageUrl, title, subtitl
   return (
     // Usamos el ref aquí para mover todo el grupo junto
     <group ref={groupRef} position={basePosition}>
-      
+
       {/* CARÁTULA TRASERA */}
       <mesh
         onPointerOver={() => setHovered(true)}
         onPointerOut={() => setHovered(false)}
-        onClick={(e) => { 
-          e.stopPropagation(); 
-          onToggle(title); 
-          onSelectZone(zoneTarget); 
+        onClick={(e) => {
+          e.stopPropagation();
+          onToggle(title);
+          onSelectZone(zoneTarget);
         }}
         castShadow
       >
@@ -136,14 +136,14 @@ function InteractiveRecordSleeve({ basePosition, color, imageUrl, title, subtitl
 
       {/* CONTENIDO HTML (¡AHORA ES UN OVERLAY SEGURO QUE FLOTA AL LADO!) */}
       {isActive && (
-        <Html 
+        <Html
           position={[1.2, 0, 0]} // Aparece a la derecha del vinilo flotante
-          center 
-          zIndexRange={[100, 0]} 
+          center
+          zIndexRange={[100, 0]}
         >
-          <div 
-            style={{ 
-              width: '280px', 
+          <div
+            style={{
+              width: '340px',
               backgroundColor: '#ffffff',
               borderLeft: `8px solid ${color}`,
               borderRadius: '8px',
@@ -153,14 +153,14 @@ function InteractiveRecordSleeve({ basePosition, color, imageUrl, title, subtitl
               boxShadow: '0px 20px 40px rgba(0,0,0,0.3)',
               animation: 'fadeIn 0.5s ease-out'
             }}
-            onClick={(e) => e.stopPropagation()} 
+            onClick={(e) => e.stopPropagation()}
           >
             <div>
               <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '2px solid #eee', paddingBottom: '8px', marginBottom: '12px' }}>
-                <h3 style={{ margin: 0, fontSize: '18px', fontWeight: 'bold', color: '#111', textTransform: 'uppercase' }}>
+                <h3 style={{ margin: 0, fontSize: '20px', fontWeight: 'bold', color: '#111', textTransform: 'uppercase' }}>
                   {pages[currentPage].title}
                 </h3>
-                <span style={{ fontSize: '12px', fontWeight: 'bold', color: '#888', background: '#f5f5f5', padding: '2px 6px', borderRadius: '4px' }}>
+                <span style={{ fontSize: '15px', fontWeight: 'bold', color: '#888', background: '#f5f5f5', padding: '2px 6px', borderRadius: '4px' }}>
                   {currentPage + 1} / {pages.length}
                 </span>
               </div>
@@ -170,21 +170,21 @@ function InteractiveRecordSleeve({ basePosition, color, imageUrl, title, subtitl
             </div>
 
             <div style={{ display: 'flex', justifyContent: 'space-between', borderTop: '1px solid #eee', paddingTop: '12px', marginTop: '16px' }}>
-              <button 
-                onClick={prevPage} 
+              <button
+                onClick={prevPage}
                 disabled={currentPage === 0}
                 style={{ fontSize: '12px', fontWeight: 'bold', padding: '6px 10px', borderRadius: '4px', border: 'none', cursor: currentPage === 0 ? 'default' : 'pointer', background: currentPage === 0 ? '#f0f0f0' : '#e2e8f0', color: currentPage === 0 ? '#ccc' : '#333' }}
               >
                 ◀ ATRÁS
               </button>
-              <button 
-                onClick={handleClose} 
+              <button
+                onClick={handleClose}
                 style={{ fontSize: '12px', fontWeight: 'bold', border: 'none', background: 'transparent', color: '#e53e3e', cursor: 'pointer' }}
               >
                 CERRAR ✕
               </button>
-              <button 
-                onClick={nextPage} 
+              <button
+                onClick={nextPage}
                 disabled={currentPage === pages.length - 1}
                 style={{ fontSize: '12px', fontWeight: 'bold', padding: '6px 10px', borderRadius: '4px', border: 'none', cursor: currentPage === pages.length - 1 ? 'default' : 'pointer', background: currentPage === pages.length - 1 ? '#f0f0f0' : '#e2e8f0', color: currentPage === pages.length - 1 ? '#ccc' : '#333' }}
               >
@@ -206,7 +206,7 @@ function InteractiveRecordSleeve({ basePosition, color, imageUrl, title, subtitl
           <boxGeometry args={[0.78, 0.78, 0.005]} />
           <meshStandardMaterial color={color} roughness={0.5} />
         </mesh>
-        
+
         <Text position={[0.4, 0.1, 0.011]} fontSize={0.09} color="#ffffff" anchorX="center" anchorY="middle" fontWeight="bold" maxWidth={0.7} textAlign="center">
           {title}
         </Text>
@@ -345,15 +345,15 @@ function NeonSign({ onSelectZone, isActive, onToggle }) {
         outlineWidth={hovered ? 0.012 : 0.006}
         outlineColor={COLORS.neon}
       >
-        {'<@diegomedinapa/>'}
+        {'<@diego-medina/>'}
       </Text>
       <pointLight color={COLORS.neon} intensity={hovered ? 1.4 : 0.9} distance={3.5} decay={2} />
 
       {isActive && (
         <Html position={[0, -0.7, 0]} center distanceFactor={4} zIndexRange={[100, 0]}>
-          <div style={{ background: '#fff', padding: '16px', borderRadius: '8px', boxShadow: '0 10px 25px rgba(0,0,0,0.2)', width: '220px', borderLeft: `4px solid ${COLORS.neon}` }}>
+          <div style={{ background: '#fff', padding: '16px', borderRadius: '8px', boxShadow: '0 10px 25px rgba(0,0,0,0.2)', width: '280px', borderLeft: `4px solid ${COLORS.neon}` }}>
             <h3 style={{ margin: '0 0 8px 0', fontSize: '16px', fontWeight: 'bold', color: '#111' }}>Mi portafolio</h3>
-            <p style={{ margin: 0, fontSize: '12px', color: '#555' }}>Este sitio web fue diseñado para que puedas ver un poco de mi trabajo y mi trayectoria a lo largo de mi vida :).</p>
+            <p style={{ margin: 0, fontSize: '12px', color: '#555' }}>Sitio web diseñado para mostrar mi trabajo y trayectoria profesional.</p>
           </div>
         </Html>
       )}
@@ -392,7 +392,7 @@ function DatabaseIcon({ onSelectZone, isActive, onToggle }) {
 
       {isActive && (
         <Html position={[0.3, 0.25, 0]} center distanceFactor={4} zIndexRange={[100, 0]}>
-          <div style={{ background: '#fff', padding: '16px', borderRadius: '8px', boxShadow: '0 10px 25px rgba(0,0,0,0.2)', width: '220px', borderLeft: `4px solid ${COLORS.database}` }}>
+          <div style={{ background: '#fff', padding: '16px', borderRadius: '8px', boxShadow: '0 10px 25px rgba(0,0,0,0.2)', width: '280px', borderLeft: `4px solid ${COLORS.database}` }}>
             <h3 style={{ margin: '0 0 8px 0', fontSize: '16px', fontWeight: 'bold', color: '#111' }}>Backend &amp; Datos</h3>
             <p style={{ margin: 0, fontSize: '12px', color: '#555' }}>NestJS, PostgreSQL y Prisma. Usados en proyectos que necesitaban un backend.</p>
           </div>
@@ -443,9 +443,9 @@ function FootballNod({ onSelectZone, isActive, onToggle }) {
 
       {isActive && (
         <Html position={[-0.4, 0.22, 0]} center distanceFactor={4} zIndexRange={[100, 0]}>
-          <div style={{ background: '#fff', padding: '16px', borderRadius: '8px', boxShadow: '0 10px 25px rgba(0,0,0,0.2)', width: '220px', borderLeft: '4px solid #111' }}>
-            <h3 style={{ margin: '0 0 8px 0', fontSize: '16px', fontWeight: 'bold', color: '#111' }}>Que haces aquí?</h3>
-            <p style={{ margin: 0, fontSize: '12px', color: '#555' }}>Este es un botón secreto, si lo presionaste, agradezco tu curiosidad :)</p>
+          <div style={{ background: '#fff', padding: '16px', borderRadius: '8px', boxShadow: '0 10px 25px rgba(0,0,0,0.2)', width: '280px', borderLeft: '4px solid #111' }}>
+            <h3 style={{ margin: '0 0 8px 0', fontSize: '16px', fontWeight: 'bold', color: '#111' }}>Nada</h3>
+            <p style={{ margin: 0, fontSize: '12px', color: '#555' }}>Este es un botón secreto, no hace nada :)</p>
           </div>
         </Html>
       )}
@@ -489,10 +489,15 @@ function Turntable({ onSelectZone, isActive, onToggle }) {
 
       {isActive && (
         <Html position={[0, 0.2, 0]} center distanceFactor={4} zIndexRange={[100, 0]}>
-          <div style={{ background: '#fff', padding: '16px', borderRadius: '8px', boxShadow: '0 10px 25px rgba(0,0,0,0.2)', width: '220px', borderLeft: '4px solid #111' }}>
+          <div style={{ background: '#fff', padding: '16px', borderRadius: '8px', boxShadow: '0 10px 25px rgba(0,0,0,0.2)', width: '280px', borderLeft: '4px solid #111' }}>
             <h3 style={{ margin: '0 0 8px 0', fontSize: '18px', fontWeight: 'bold', color: '#111' }}>Contacto</h3>
             <p style={{ margin: 0, fontSize: '12px', color: '#555' }}>diegomdnp@gmail.com</p>
             <p style={{ margin: '4px 0 0 0', fontSize: '12px', color: '#555' }}>+56 9 8214 4956</p>
+            <p style={{ margin: '4px 0 0 0', fontSize: '12px', color: '#555' }}>
+              <a href="https://www.linkedin.com/in/diego-medina-paredes-a698a8241/" target="_blank" rel="noopener noreferrer" style={{ color: '#555' }}>
+                LinkedIn
+              </a>
+            </p>
           </div>
         </Html>
       )}
@@ -503,7 +508,7 @@ function Turntable({ onSelectZone, isActive, onToggle }) {
 function RetroCorner({ onSelectZone, isActive, onToggle }) {
   const [hovered, setHovered] = useState(false);
   useCursor(hovered);
-  const figureTexture = useTexture('/pangoro.png'); 
+  const figureTexture = useTexture('/pangoro.png');
   return (
     <group position={[-2.2, 1.625, -0.7]}>
       <mesh castShadow onPointerOver={() => setHovered(true)} onPointerOut={() => setHovered(false)} onClick={(e) => { e.stopPropagation(); onToggle('RETRO'); onSelectZone('contact'); }}>
@@ -524,12 +529,12 @@ function RetroCorner({ onSelectZone, isActive, onToggle }) {
         <meshStandardMaterial color={COLORS.proyectos} emissive={COLORS.proyectos} emissiveIntensity={1.2} />
       </mesh>
       <mesh position={[0.4, 0.25, -0.1]} castShadow><planeGeometry args={[0.4, 0.4]} /><meshBasicMaterial map={figureTexture} transparent={true} side={THREE.DoubleSide} /></mesh>
-      
+
       {isActive && (
         <Html position={[0, 0.2, 0]} center distanceFactor={4} zIndexRange={[100, 0]}>
-          <div style={{ background: '#fff', padding: '16px', borderRadius: '8px', boxShadow: '0 10px 25px rgba(0,0,0,0.2)', width: '220px', borderLeft: '4px solid #8C52FF' }}>
+          <div style={{ background: '#fff', padding: '16px', borderRadius: '8px', boxShadow: '0 10px 25px rgba(0,0,0,0.2)', width: '280px', borderLeft: '4px solid #8C52FF' }}>
             <h3 style={{ margin: '0 0 8px 0', fontSize: '16px', fontWeight: 'bold', color: '#111' }}>Ocio</h3>
-            <p style={{ margin: 0, fontSize: '12px', color: '#555' }}>No todo es trabajar. Me gusta relajarme escuchando música y jugando videojuegos, como cualquier informático jaja</p>
+            <p style={{ margin: 0, fontSize: '12px', color: '#555' }}>Me gusta escuchar música, los videojuegos, aprender nuevas cosas y pasar tiempo con amigos :p</p>
           </div>
         </Html>
       )}
@@ -566,12 +571,12 @@ function ThesisFolder({ onSelectZone, isActive, onToggle }) {
           <meshStandardMaterial color="#3B2A1E" roughness={0.6} />
         </mesh>
       </group>
-      
+
       {isActive && (
         <Html position={[0, 0.2, 0]} center distanceFactor={4} zIndexRange={[100, 0]}>
-          <div style={{ background: '#fff', padding: '16px', borderRadius: '8px', boxShadow: '0 10px 25px rgba(0,0,0,0.2)', width: '220px', borderLeft: '4px solid #FFDE59' }}>
-            <h3 style={{ margin: '0 0 8px 0', fontSize: '16px', fontWeight: 'bold', color: '#111' }}>Actualmente...</h3>
-            <p style={{ margin: 0, fontSize: '12px', color: '#555' }}>Me encuentro trabajando en mi tesis. Es sobre el Burnout Digital en estudiantes de educación superior, deseenme suerte para aprobar mi tesis :D.</p>
+          <div style={{ background: '#fff', padding: '16px', borderRadius: '8px', boxShadow: '0 10px 25px rgba(0,0,0,0.2)', width: '280px', borderLeft: '4px solid #FFDE59' }}>
+            <h3 style={{ margin: '0 0 8px 0', fontSize: '18px', fontWeight: 'bold', color: '#111' }}>Actualmente...</h3>
+            <p style={{ margin: 0, fontSize: '14px', color: '#555' }}>Me encuentro haciendo mi tesis, el tema central es sobre el Burnout Digital en estudiantes de educación superior.</p>
           </div>
         </Html>
       )}
@@ -590,7 +595,7 @@ function LanguageBooks() {
 }
 
 function WineAndPhoto() {
-  const photoTexture = useTexture('/diego.jpg'); 
+  const photoTexture = useTexture('/diego.jpg');
   return (
     <group position={[0, 1.6, -0.7]}>
       <mesh position={[-0.3, 0.25, 0]} castShadow><cylinderGeometry args={[0.06, 0.06, 0.3, 16]} /><meshPhysicalMaterial color="#2E0814" transparent opacity={0.9} roughness={0.05} transmission={0.6} thickness={0.3} /></mesh>
@@ -635,7 +640,7 @@ export default function RecordStoreScene() {
     cameraControlsRef.current?.setLookAt(
       position[0], position[1], position[2],
       target[0], target[1], target[2],
-      true 
+      true
     );
   };
 
@@ -689,7 +694,7 @@ export default function RecordStoreScene() {
         NOTA: Ahora se usa basePosition en lugar de position para que el vinilo 
         recuerde dónde debe regresar después de volar hacia ti.
       */}
-      <InteractiveRecordSleeve 
+      <InteractiveRecordSleeve
         basePosition={[-2, 2.4, -1.25]} color={COLORS.academica} imageUrl="/covers/academica.jpg"
         title="ACADÉMICA" subtitle="EXPERIENCIA"
         zoneTarget="projects" onSelectZone={handleSelectZone}
@@ -698,70 +703,69 @@ export default function RecordStoreScene() {
         pages={[
           { title: "U. de Talca", content: "Estudiante de 5to año en Ingeniería en Informática Empresarial." },
           { title: "FH Münster", content: "Intercambio académico internacional cursando Bachelor of Business Administration (BBA) en Alemania durante el primer semestre del 2025." },
-          { title: "Liderazgo", content: "Vicepresidente del Centro de Estudiantes. Encargado de planificar actividades y participar en reuniones relacionadas a mi carrera." }
-          
+          { title: "Liderazgo", content: "Vicepresidente del Centro de Estudiantes. Encargado de planificar actividades y participar en reuniones relacionadas a la carrera." }
+
         ]}
       />
 
-      <InteractiveRecordSleeve 
+      <InteractiveRecordSleeve
         basePosition={[-1, 2.4, -1.25]} color={COLORS.experiencia} imageUrl="/covers/experiencia.jpg"
         title="EXPERIENCIA" subtitle="LABORAL"
         zoneTarget="projects" onSelectZone={handleSelectZone}
         isActive={activeItem === "EXPERIENCIA"}
         onToggle={handleToggleItem}
         pages={[
-          { title: "Ayudante", content: "Apoyo a los estudiantes de IIE de la Universidad de Talca en los ramos de Algoritmos, Programación y POO" },
-          { title: "Desarrollador de Software", content: "Diseño e implementación de un sistema de gestión utilizando Python y Excel para optimizar la administración de liquidaciones, boletas y notificaciones automáticas de pago" },
-          { title: "Apoyo técnico a RRII, Utalca", content: "Apoyo al departamento de Relaciones Internacionales de la Universidad de Talca, cumpliendo funciones con programas ofimáticos y haciendo uso de PhpMyAdmin" },
-          { title: "Desarrollo Full-Stack y Arquitectura de datos (FEN)", content: "Creación de un sistema de registro de actividades académicas de la mano con Vinculación con el Medio de la FEN, Utalca" }
+          { title: "Ayudante", content: "Apoyo a los estudiantes de IIE de la Universidad de Talca en los ramos de Algoritmos, Programación y POO, dando clases y revisando controles" },
+          { title: "Desarrollador", content: "Diseño e implementación de un sistema de gestión utilizando Python y Excel para optimizar la administración de liquidaciones, boletas y notificaciones automáticas de pago" },
+          { title: "Apoyo técnico", content: "Apoyo al departamento de Relaciones Internacionales de la Universidad de Talca, cumpliendo funciones con programas ofimáticos y haciendo uso de PhpMyAdmin" },
+          { title: "Desarrollador", content: "Creación de un sistema de registro de actividades académicas de la mano con Vinculación con el Medio de la FEN, Utalca" }
         ]}
       />
 
-      <InteractiveRecordSleeve 
+      <InteractiveRecordSleeve
         basePosition={[0, 2.4, -1.25]} color={COLORS.proyectos} imageUrl="/covers/proyectos.jpg"
         title="PROYECTOS" subtitle="DESTACADOS"
         zoneTarget="projects" onSelectZone={handleSelectZone}
         isActive={activeItem === "PROYECTOS"}
         onToggle={handleToggleItem}
         pages={[
-          { title: "GachaDex", content: "Aplicación Full-Stack desplegada en Netlify. Implementa algoritmos de Machine Learning (KNN) para recomendar Pokémon similares." },
-          
+          { title: "GachaDex", content: "Aplicación Full-Stack desplegada en Netlify. Implementa algoritmos de Machine Learning (KNN) para recomendar Pokémon." },
+
         ]}
       />
 
-      <InteractiveRecordSleeve 
+      <InteractiveRecordSleeve
         basePosition={[1, 2.4, -1.25]} color={COLORS.certificados} imageUrl="/covers/certificados.jpg"
         title="CERTIFICADOS" subtitle="LOGROS"
         zoneTarget="projects" onSelectZone={handleSelectZone}
         isActive={activeItem === "CERTIFICADOS"}
         onToggle={handleToggleItem}
         pages={[
-          { title: "Certificaciones", content: "Excel - Nivel Avanzado (Santander Open Academy)"},
-          { title: "Certificaciones", content: "Marketing Digital (University of Chicago - Santander Open Academy)"},
-          { title: "Certificaciones", content: "Scrum Foundation Professional Certification - SFPC (CertiProf)"},
-          { title: "Certificaciones", content: "Transformación Digital (MIT Profesional Education - Santander Open Academy)"},
-          { title: "Certificaciones", content: "Google: Inteligencia Artificial y Productividad (Google - Santander Open Academy)"},
-          { title: "Certificaciones", content: "Java - Sololearn"},
-          { title: "Certificaciones", content: "JavaScript - Sololearn"},
+          { title: "Certificaciones", content: "Excel - Nivel Avanzado (Santander Open Academy)" },
+          { title: "Certificaciones", content: "Marketing Digital (University of Chicago - Santander Open Academy)" },
+          { title: "Certificaciones", content: "Scrum Foundation Professional Certification - SFPC (CertiProf)" },
+          { title: "Certificaciones", content: "Transformación Digital (MIT Profesional Education - Santander Open Academy)" },
+          { title: "Certificaciones", content: "Google: Inteligencia Artificial y Productividad (Google - Santander Open Academy)" },
+          { title: "Certificaciones", content: "Java - Sololearn" },
+          { title: "Certificaciones", content: "JavaScript - Sololearn" },
         ]}
       />
 
-      <InteractiveRecordSleeve 
+      <InteractiveRecordSleeve
         basePosition={[2, 2.4, -1.25]} color={COLORS.idiomas} imageUrl="/covers/idiomas.jpg"
         title="IDIOMAS" subtitle="HABILIDADES"
         zoneTarget="projects" onSelectZone={handleSelectZone}
         isActive={activeItem === "IDIOMAS"}
         onToggle={handleToggleItem}
         pages={[
-          { title: "Idiomas Base", content: "Español: Nativo (Chile).\nInglés: Nivel Avanzado (B2), capacitado para entornos laborales y lectura técnica." },
-          { title: "Aprendizaje", content: "Alemán: A2 Completado .\nFrancés: A2, actualmente en estudio." }
+          { title: "Idiomas", content: "Español: Nativo.\n Inglés: B2 \t Alemán: A2 .\n Francés: A1" },
         ]}
       />
 
       {/* --- LA MESA --- */}
       <Turntable onSelectZone={handleSelectZone} isActive={activeItem === 'TURNTABLE'} onToggle={handleToggleItem} />
       <RetroCorner onSelectZone={handleSelectZone} isActive={activeItem === 'RETRO'} onToggle={handleToggleItem} />
-      <ThesisFolder onSelectZone={handleSelectZone} isActive={activeItem === 'THESIS'} onToggle={handleToggleItem} /> 
+      <ThesisFolder onSelectZone={handleSelectZone} isActive={activeItem === 'THESIS'} onToggle={handleToggleItem} />
       <LanguageBooks />
       <WineAndPhoto />
       <DatabaseIcon onSelectZone={handleSelectZone} isActive={activeItem === 'DATABASE'} onToggle={handleToggleItem} />
@@ -783,10 +787,10 @@ export default function RecordStoreScene() {
       />
 
       {/* CÚPULA DE ESCAPE */}
-      <mesh onClick={(e) => { 
+      <mesh onClick={(e) => {
         if (e.eventObject === e.object) {
           handleSelectZone('overview');
-          setActiveItem(null); 
+          setActiveItem(null);
         }
       }}>
         <sphereGeometry args={[15, 32, 32]} />
